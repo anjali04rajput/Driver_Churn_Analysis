@@ -1,0 +1,57 @@
+1.
+Total Drivers = 
+DISTINCTCOUNT(monthly_activity[driver_id])
+2. 
+Churned Drivers = 
+CALCULATE(
+    DISTINCTCOUNT(monthly_activity[driver_id]),
+    monthly_activity[churned] = 1)
+3.
+Active Drivers = 
+[Total Drivers] - [Churned Drivers]
+4.
+Churn Rate = 
+DIVIDE(
+    [Churned Drivers],
+    [Total Drivers], 0)
+5.
+Avg Earnings = 
+AVERAGE(monthly_activity[earnings])
+6.
+Avg Rides = 
+AVERAGE(monthly_activity[rides_completed])
+7.
+Avg Login Hours = 
+AVERAGE(monthly_activity[login_hours])
+8.
+Churn Status = 
+IF(
+    monthly_activity[churned] = 1,
+    "Churned",
+    "Active")
+9.
+Total Cohorts = 
+DISTINCTCOUNT(cohort_table[cohort_month])
+10.
+Avg 3M Retention = 
+CALCULATE(
+    AVERAGE(cohort_table[retention_rate]),
+    cohort_table[cohort_index] = 3
+)
+11.
+Retention Rate = 
+DIVIDE(
+    SUM(cohort_table[active_drivers]),
+    CALCULATE(
+        SUM(cohort_table[active_drivers]),
+        cohort_table[cohort_index] = 0
+    ),
+    0
+)
+12.
+Cohort Index = 
+DATEDIFF(
+    RELATED(driver_master[cohort month]) ,
+    monthly_activity[month],
+    MONTH
+)
